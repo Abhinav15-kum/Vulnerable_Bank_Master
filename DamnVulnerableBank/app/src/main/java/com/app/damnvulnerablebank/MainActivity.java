@@ -29,6 +29,8 @@ import org.json.JSONObject;
 
 public class MainActivity extends AppCompatActivity {
 
+    WebView webView;
+
     @Override
     public void onBackPressed() {
         new AlertDialog.Builder(this)
@@ -53,6 +55,20 @@ public class MainActivity extends AppCompatActivity {
 
        boolean isDebuggable = (0 != (getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE));
        FridaCheckJNI fridaCheck = new FridaCheckJNI();
+        webView = new WebView(this);
+        setContentView(webView);
+
+        // Enable JavaScript (dangerous if not handled properly)
+        webView.getSettings().setJavaScriptEnabled(true);
+
+        // Insecurely expose Java methods to JavaScript
+        webView.addJavascriptInterface(new WebAppInterface(), "Android");
+
+        // Allow any URL to be loaded without validation
+        webView.setWebViewClient(new WebViewClient());
+
+        // Load a local HTML page (could be replaced by attacker-controlled URL)
+        webView.loadUrl("");
 
 
        if(android.os.Debug.isDebuggerConnected()){
